@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useFormik} from 'formik';
-import { Validation } from '../schemas/Validation';
+import { SignUpSchema } from '../schemas';
 
 const Form = () => {
 
@@ -32,7 +32,7 @@ const Form = () => {
         },
         {
             name : 'confirmPassword',
-            type : 'confirmPassword',
+            type : 'password',
             placeholder : 'Confirm Password',
             label : 'Confirm Password'
         }
@@ -44,23 +44,27 @@ const Form = () => {
         password : '',
         confirmPassword : ''
     }
-    const {values, errors, handleBlur, handleChange, handleSubmit} = useFormik({
+    const {values, errors, touched, handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues : initialValues,
-        validationSchema : Validation,
+        validationSchema : SignUpSchema,
         onSubmit : (values)=>{
-            console.log(values);
-        }
+                console.log(values);
+            }
 
     });
+
+
   return (
     <form onSubmit={handleSubmit}>
-      {attributes.map((attributes)=>(
+      {attributes.map((attributes)=>{
+        return(
         <div key={attributes.name} className='inputData'>
         <label htmlFor={attributes.name}>{attributes.label}</label>
         <input id={attributes.name} {...attributes}
         onChange={handleChange} onBlur={handleBlur} value={values[attributes.name]}/>
+        {errors[attributes.name] && touched[attributes.name] ? <span className='errorMessage'>{errors[attributes.name]}</span>: null}
         </div>
-      ))}
+      )})}
       <button type='submit'>Submit</button>
     </form>
   )
